@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import "../styles/globals.css";
 import type { AppProps } from "next/app";
-import { ChakraProvider, defaultSystem, useDisclosure } from "@chakra-ui/react";
+import { ChakraProvider, useDisclosure } from "@chakra-ui/react";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { useState } from "react";
 
@@ -38,7 +39,7 @@ export default function App({ Component, pageProps }: AppProps) {
   });
 
   return (
-    <ChakraProvider value={defaultSystem}>
+    <ChakraProvider>
       <QueryClientProvider client={queryClient}>
         <Component {...pageProps} />
       </QueryClientProvider>
