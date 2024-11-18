@@ -6,31 +6,66 @@ import {
   FormControl,
   Select,
   useToast,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import { useMutation, useQuery } from "react-query";
-import { getAllMember, regiestMember } from "../service/request";
+import { loginRequest, regiestMember } from "../service/request";
 import { useForm } from "react-hook-form";
 import { MemberType } from "../type";
+import { useRouter } from "next/router";
 
 const SignIn = () => {
   const toast = useToast();
+  const router = useRouter();
   const [isRegiest, setIsRegiest] = useState(false);
   const {
     handleSubmit,
     register,
     setValue,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<MemberType>();
 
-  const createMutation = useMutation(regiestMember, {
+  const regiestMutation = useMutation(regiestMember, {
     onSuccess: (res) => {
+      toast({
+        title: "註冊成功",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
       console.log(res);
     },
-    onError: (error) => {},
+    onError: (error) => {
+      toast({
+        title: "註冊失敗",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    },
+  });
+
+  const loginMutation = useMutation(loginRequest, {
+    onSuccess: (res) => {
+      console.log(res);
+      router.push("/home");
+    },
+    onError: (error) => {
+      console.log(error);
+      toast({
+        title: "登入失敗",
+        description: "帳號或密碼錯誤",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    },
   });
 
   const onSubmit = (data) => {
-    createMutation.mutate(data);
+    if (isRegiest) regiestMutation.mutate(data);
+    else loginMutation.mutate(data);
   };
 
   return (
@@ -71,7 +106,7 @@ const SignIn = () => {
             <Box fontSize={"5rem"} h={"20%"} fontWeight={800}>
               NOVEL
             </Box>
-            <FormControl w={"80%"}>
+            <FormControl w={"80%"} isInvalid={!!errors.email}>
               <Input
                 {...register("email", {
                   required: "This is required",
@@ -83,8 +118,11 @@ const SignIn = () => {
                 p={"1rem"}
                 letterSpacing={"5px"}
               />
+              <FormErrorMessage>
+                {errors.email && errors.email.message}
+              </FormErrorMessage>
             </FormControl>
-            <FormControl w={"80%"}>
+            <FormControl w={"80%"} isInvalid={!!errors.password}>
               <Input
                 {...register("password", {
                   required: "This is required",
@@ -97,6 +135,9 @@ const SignIn = () => {
                 p={"1rem"}
                 letterSpacing={"5px"}
               />
+              <FormErrorMessage>
+                {errors.password && errors.password.message}
+              </FormErrorMessage>
             </FormControl>
             {isRegiest && (
               <>
@@ -150,6 +191,7 @@ const SignIn = () => {
               _hover={{
                 transform: "scale(1.05)",
               }}
+              isLoading={regiestMutation.isLoading || loginMutation.isLoading}
             >
               {isRegiest ? "REGIEST" : "SIGN IN"}
             </Button>
@@ -189,7 +231,10 @@ const SignIn = () => {
                 bgColor: "white",
                 color: "#3AB19B",
               }}
-              onClick={() => setIsRegiest(!isRegiest)}
+              onClick={() => {
+                setIsRegiest(!isRegiest);
+                reset();
+              }}
             >
               {isRegiest ? "SIGN IN" : "REGIEST"}
             </Button>

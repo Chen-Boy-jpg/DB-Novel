@@ -13,3 +13,14 @@ export const getAllMember = async (): Promise<
 export const regiestMember = async (data: Type.RegiestType): Promise<any> => {
   return postWithResponse(`/member/regiest`, { data }).then((r) => r);
 };
+
+export const loginRequest = async (data: {
+  email: string;
+  password: string;
+}): Promise<any> => {
+  return postWithResponse(`/member/login`, { data }).then((r) => r);
+};
+
+export const getProfile = async () => {
+  return request(`/member/profile`, {}).then((r) => r);
+};

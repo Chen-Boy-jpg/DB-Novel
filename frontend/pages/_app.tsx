@@ -4,6 +4,7 @@ import type { AppProps } from "next/app";
 import { ChakraProvider, useDisclosure } from "@chakra-ui/react";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { useState } from "react";
+import Header from "@/common-components/header";
 
 interface ErrorState {
   type: string;
@@ -41,6 +42,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider>
       <QueryClientProvider client={queryClient}>
+        <Header />
         <Component {...pageProps} />
       </QueryClientProvider>
     </ChakraProvider>
