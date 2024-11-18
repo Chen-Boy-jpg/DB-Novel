@@ -1,123 +1,202 @@
 import React, { useState } from "react";
-import { Box, Button, Input, FormControl } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Input,
+  FormControl,
+  Select,
+  useToast,
+} from "@chakra-ui/react";
+import { useMutation, useQuery } from "react-query";
+import { getAllMember, regiestMember } from "../service/request";
+import { useForm } from "react-hook-form";
+import { MemberType } from "../type";
 
 const SignIn = () => {
-  const [isSwapped, setIsSwapped] = useState(false);
+  const toast = useToast();
+  const [isRegiest, setIsRegiest] = useState(false);
+  const {
+    handleSubmit,
+    register,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm<MemberType>();
+
+  const createMutation = useMutation(regiestMember, {
+    onSuccess: (res) => {
+      console.log(res);
+    },
+    onError: (error) => {},
+  });
+
+  const onSubmit = (data) => {
+    createMutation.mutate(data);
+  };
 
   return (
-    <Box
-      w={"100vw"}
-      h={"100vh"}
-      display={"flex"}
-      justifyContent={"center"}
-      alignItems={"center"}
-      bgColor={"#F2ECEC"}
-    >
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Box
-        w={"80%"}
-        maxW={"1540px"}
-        h={"80%"}
-        maxH={"1000px"}
+        w={"100vw"}
+        h={"100vh"}
         display={"flex"}
-        shadow={"lg"}
-        borderRadius={"2rem"}
-        overflow={"hidden"}
+        justifyContent={"center"}
+        alignItems={"center"}
+        bgColor={"#F2ECEC"}
       >
         <Box
-          h={"100%"}
-          w={"100%"}
+          w={"80%"}
+          maxW={"1540px"}
+          h={"80%"}
+          maxH={"1000px"}
           display={"flex"}
-          flexDir={"column"}
-          alignItems={"center"}
-          justifyContent={"space-around"}
-          bgColor={"white"}
-          color={"#3AB19B"}
-          style={{
-            backfaceVisibility: "hidden",
-            transform: isSwapped ? "translateX(100%)" : "none",
-            transition: "transform 0.8s ease-in-out",
-          }}
+          shadow={"lg"}
+          borderRadius={"2rem"}
+          overflow={"hidden"}
         >
-          <Box fontSize={"5rem"} h={"20%"} fontWeight={800}>
-            NOVEL
-          </Box>
-          <FormControl w={"80%"}>
-            <Input
-              placeholder="Account"
-              variant={"flushed"}
-              fontSize={"1.5rem"}
-              bgColor={"#F4F8F7"}
-              p={"1rem"}
-              letterSpacing={"5px"}
-            />
-          </FormControl>
-          <FormControl w={"80%"}>
-            <Input
-              type="password"
-              variant={"flushed"}
-              placeholder="Password"
-              fontSize={"1.5rem"}
-              bgColor={"#F4F8F7"}
-              p={"1rem"}
-              letterSpacing={"5px"}
-            />
-          </FormControl>
-          <Button
-            color={"white"}
-            bgColor={"#3AB19B"}
-            borderRadius={"10rem"}
-            w={"50%"}
-            h={"5rem"}
-            fontSize={"1.5rem"}
-            _hover={{
-              transform: "scale(1.05)",
+          <Box
+            h={"100%"}
+            w={"100%"}
+            display={"flex"}
+            flexDir={"column"}
+            alignItems={"center"}
+            justifyContent={"space-around"}
+            bgColor={"white"}
+            color={"#3AB19B"}
+            style={{
+              backfaceVisibility: "hidden",
+              transform: isRegiest ? "translateX(100%)" : "none",
+              transition: "transform 0.8s ease-in-out",
             }}
           >
-            {isSwapped ? "REGIEST" : "SIGN IN"}
-          </Button>
-        </Box>
+            <Box fontSize={"5rem"} h={"20%"} fontWeight={800}>
+              NOVEL
+            </Box>
+            <FormControl w={"80%"}>
+              <Input
+                {...register("email", {
+                  required: "This is required",
+                })}
+                placeholder="email"
+                variant={"flushed"}
+                fontSize={"1.5rem"}
+                bgColor={"#F4F8F7"}
+                p={"1rem"}
+                letterSpacing={"5px"}
+              />
+            </FormControl>
+            <FormControl w={"80%"}>
+              <Input
+                {...register("password", {
+                  required: "This is required",
+                })}
+                type="password"
+                variant={"flushed"}
+                placeholder="Password"
+                fontSize={"1.5rem"}
+                bgColor={"#F4F8F7"}
+                p={"1rem"}
+                letterSpacing={"5px"}
+              />
+            </FormControl>
+            {isRegiest && (
+              <>
+                <FormControl w={"80%"}>
+                  <Input
+                    {...register("mName")}
+                    variant={"flushed"}
+                    placeholder="Name"
+                    fontSize={"1.5rem"}
+                    bgColor={"#F4F8F7"}
+                    p={"1rem"}
+                    letterSpacing={"5px"}
+                  />
+                </FormControl>
+                <FormControl w={"80%"}>
+                  <Select
+                    fontSize={"1.5rem"}
+                    bgColor={"#F4F8F7"}
+                    onChange={(e) => {
+                      setValue("gender", e.target.value);
+                    }}
+                  >
+                    <option value={"-"}>--</option>
+                    <option value={"M"}>男</option>
+                    <option value={"F"}>女</option>
+                  </Select>
+                </FormControl>
+                <FormControl w={"80%"}>
+                  <Input
+                    type="date"
+                    variant={"flushed"}
+                    placeholder="Password"
+                    fontSize={"1.5rem"}
+                    bgColor={"#F4F8F7"}
+                    onChange={(e) => {
+                      setValue("birthday", e.target.value);
+                    }}
+                  />
+                </FormControl>
+              </>
+            )}
 
-        <Box
-          w={"100%"}
-          h={"100%"}
-          bgColor={"#3AA9AB"}
-          display={"flex"}
-          flexDir={"column"}
-          alignItems={"center"}
-          justifyContent={"center"}
-          gap={"2rem"}
-          style={{
-            backfaceVisibility: "hidden",
-            transform: isSwapped ? "translateX(-100%)" : "none",
-            transition: "transform 0.8s ease-in-out",
-          }}
-        >
-          <Box fontSize={"3rem"} color={"white"} fontWeight={800}>
-            Hello, friend
+            <Button
+              type="submit"
+              color={"white"}
+              bgColor={"#3AB19B"}
+              borderRadius={"10rem"}
+              w={"50%"}
+              h={"5rem"}
+              fontSize={"1.5rem"}
+              _hover={{
+                transform: "scale(1.05)",
+              }}
+            >
+              {isRegiest ? "REGIEST" : "SIGN IN"}
+            </Button>
           </Box>
-          <Box fontSize={"1rem"} color={"white"} fontWeight={600}>
-            Enter your personal information
-          </Box>
-          <Button
-            variant={"outline"}
-            fontSize={"1.5rem"}
-            color={"white"}
-            h={"4rem"}
-            w={"10rem"}
-            fontWeight={600}
-            borderRadius={"10rem"}
-            _hover={{
-              transform: "scale(1.05)",
-              bgColor: "white",
-              color: "#3AB19B",
+
+          <Box
+            w={"100%"}
+            h={"100%"}
+            bgColor={"#3AA9AB"}
+            display={"flex"}
+            flexDir={"column"}
+            alignItems={"center"}
+            justifyContent={"center"}
+            gap={"2rem"}
+            style={{
+              backfaceVisibility: "hidden",
+              transform: isRegiest ? "translateX(-100%)" : "none",
+              transition: "transform 0.8s ease-in-out",
             }}
-            onClick={() => setIsSwapped(!isSwapped)}
           >
-            {isSwapped ? "SIGN IN" : "REGIEST"}
-          </Button>
+            <Box fontSize={"3rem"} color={"white"} fontWeight={800}>
+              Hello, friend
+            </Box>
+            <Box fontSize={"1rem"} color={"white"} fontWeight={600}>
+              Enter your personal information
+            </Box>
+            <Button
+              variant={"outline"}
+              fontSize={"1.5rem"}
+              color={"white"}
+              h={"4rem"}
+              w={"10rem"}
+              fontWeight={600}
+              borderRadius={"10rem"}
+              _hover={{
+                transform: "scale(1.05)",
+                bgColor: "white",
+                color: "#3AB19B",
+              }}
+              onClick={() => setIsRegiest(!isRegiest)}
+            >
+              {isRegiest ? "SIGN IN" : "REGIEST"}
+            </Button>
+          </Box>
         </Box>
       </Box>
-    </Box>
+    </form>
   );
 };
 
