@@ -16,7 +16,7 @@ def get_members():
 
 @member_bp.route('/regiest', methods=['POST'])
 def add_members()->dict:
-    data = request.get_json()  # 從請求中提取 JSON 資料
+    data = request.get_json()['data']  # 從請求中提取 JSON 資料
     if not data:
         return jsonify({'error': 'No input data provided'}), 400
 
@@ -25,7 +25,10 @@ def add_members()->dict:
     for field in required_fields:
         if field not in data:
             return jsonify({'error': f'Missing field: {field}'}), 400
-
+    # 檢查會員是否存在    
+    member = Member.query.filter_by(email=data['email']).first()
+    if  member:
+        return jsonify({'error': 'Member has regiested'}), 404
     # 建立新的會員物件
     new_member = Member(
         mName=data['mName'],
@@ -47,7 +50,7 @@ def add_members()->dict:
 
 @member_bp.route('/login', methods=['POST'])
 def login():
-    data = request.get_json()
+    data = request.get_json()['data']
     if not data:
         return jsonify({'error': 'No input data provided'}), 400
 
