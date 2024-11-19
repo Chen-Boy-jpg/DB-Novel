@@ -14,10 +14,23 @@ import {
   DrawerCloseButton,
   useDisclosure,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
+import { getProfile, logout } from "./service/request";
+import { useMutation, useQuery } from "react-query";
+import { useRouter } from "next/router";
 
 const Header = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const router = useRouter();
+  const leftDrawer = useDisclosure(); // 控制左侧 Drawer 的状态
+  const { data } = useQuery("member", getProfile, {
+    onSuccess: (res) => {
+      localStorage.setItem("memberData", JSON.stringify(res));
+    },
+    retry: false,
+  });
+
+  const logoutMutation = useMutation(["logout"], logout, { retry: false });
+
   return (
     <Box
       w={"95%"}
@@ -37,36 +50,43 @@ const Header = () => {
       <Button
         variant={"outline"}
         border={"3px solid #3AB19B"}
-        w={"10%"}
         h={"90%"}
         borderRadius={"3rem"}
         color={"#3AB19B"}
         fontSize={"2.5rem"}
-        onClick={onOpen}
+        onClick={leftDrawer.onOpen}
       >
         Novel
       </Button>
+
       <Input w={"30%"} bgColor={"#ECEFF6"} />
+
       <Button
         display={"flex"}
         alignItems={"center"}
         gap={"1rem"}
-        w={"10%"}
         h={"90%"}
         variant={"outline"}
-        border={"3px solid #3AB19B"}
         borderRadius={"3rem"}
         color={"#3AB19B"}
         fontSize={"2.5rem"}
+        onClick={() => {
+          if (window.confirm("確定要登出??")) logoutMutation.mutate();
+        }}
       >
         <Avatar>
           <AvatarBadge boxSize="1.25em" bg="green.500" />
         </Avatar>
         <Box fontSize={"1.5rem"} fontWeight={600}>
-          Dainel
+          {data?.mName}
         </Box>
       </Button>
-      <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
+
+      <Drawer
+        isOpen={leftDrawer.isOpen}
+        placement="left"
+        onClose={leftDrawer.onClose}
+      >
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
@@ -81,8 +101,7 @@ const Header = () => {
               Novel
             </Box>
           </DrawerHeader>
-
-          <DrawerBody m={0} p={0}>
+          <DrawerBody m={0} p={0} mt={"5rem"}>
             <Button
               h={"5rem"}
               w={"100%"}
@@ -93,9 +112,18 @@ const Header = () => {
             >
               Home
             </Button>
+            <Button
+              h={"5rem"}
+              w={"100%"}
+              bgColor={"white"}
+              fontSize={"2rem"}
+              fontWeight={"600"}
+              variant={"ghost"}
+              onClick={() => router.push("/bookshell")}
+            >
+              Bookshell
+            </Button>
           </DrawerBody>
-
-          <DrawerFooter></DrawerFooter>
         </DrawerContent>
       </Drawer>
     </Box>
