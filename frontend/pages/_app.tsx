@@ -5,6 +5,7 @@ import { ChakraProvider, useDisclosure } from "@chakra-ui/react";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { useState } from "react";
 import Header from "@/common-components/header";
+import { useRouter } from "next/router";
 
 interface ErrorState {
   type: string;
@@ -12,6 +13,8 @@ interface ErrorState {
 }
 
 export default function App({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+  const isLoginPage = router.pathname === "/login";
   const [error, setError] = useState<ErrorState | null>(null);
   // const { open, onOpen, onClose } = useDisclosure();
   const queryClient = new QueryClient({
@@ -42,7 +45,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider>
       <QueryClientProvider client={queryClient}>
-        <Header />
+        {!isLoginPage && <Header />}
         <Component {...pageProps} />
       </QueryClientProvider>
     </ChakraProvider>

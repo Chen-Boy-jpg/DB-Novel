@@ -95,6 +95,26 @@ export const requestWithTimeout =
 export const request = requestWithTimeout(500000, false);
 export const requestWithApiSuffix = requestWithTimeout(500000, true);
 
+export const requestWithReq = async <T>(
+  endpoint: string,
+  payload: T,
+  removeApiSuffix: boolean = false
+) => {
+  try {
+    const response = await requestWithTimeout(50000, removeApiSuffix).bind(
+      null,
+      endpoint,
+      {
+        method: "GET",
+        params: payload,
+      }
+    )();
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const put = <T>(
   endpoint: string,
   payload: T,
