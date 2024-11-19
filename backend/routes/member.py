@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from flask_login import login_user, login_required, current_user,LoginManager
+from flask_login import login_user, login_required, current_user,LoginManager,logout_user
 from models.member import Member
 from models import db
 
@@ -76,12 +76,16 @@ def login():
     login_user(user)  # 使用 Flask-Login 來登入用戶
 
     return jsonify({'message': 'Login successful!'}), 200
+@member_bp.route('/logout', methods=['POST'])
+@login_required  
+def logout():
+    logout_user()  
+    return jsonify({'message': 'Logout successful!'}), 200
+
 
 @member_bp.route('/profile', methods=['GET'])
 @login_required
 def profile():
-    
-    return jsonify({
-        'mId': current_user.mId,
-        'message': 'This is your profile'
-    })
+   
+    return jsonify(current_user.to_dict())
+

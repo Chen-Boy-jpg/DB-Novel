@@ -9,13 +9,29 @@ bookshell_bp = Blueprint('bookshell', __name__)
 
 @bookshell_bp.route('/', methods=['GET'])
 def get_bookshells():
-    bookshells = Bookshell.query.all()
+   # 从请求中获取 mId
+    
+    m_id =  request.args.get('mId')  
+    print(m_id)
+
+    # 如果没有 mId 参数，返回错误信息
+    if not m_id:
+        return jsonify({'error': 'mId is required'}), 400
+
+    # 根据 mId 查找相应的数据
+    bookshells = Bookshell.query.filter_by(mId=m_id).all()
+
+    # 如果没有找到相关数据
+    if not bookshells:
+        return jsonify({'message': 'No bookshells found for this mId'}), 404
+
+    # 将查询结果转化为字典并返回
     bookshells_list = [bookshell.to_dict() for bookshell in bookshells]
     return jsonify({'bookshells': bookshells_list})
 
 @bookshell_bp.route('/new', methods=['POST'])
 def add_bookshells()->dict:
-    data = request.get_json()  # 從請求中提取 JSON 資料
+    data = request.get_json()['data']  
     if not data:
         return jsonify({'error': 'No input data provided'}), 400
 
@@ -25,14 +41,9 @@ def add_bookshells()->dict:
         if field not in data:
             return jsonify({'error': f'Missing field: {field}'}), 400
         
-    # 為會員生成唯一的 bId
-    unique_bId = str(uuid.uuid4())  # 使用 UUID 生成唯一值
-
-
     # 建立新的會員物件
     new_bookshell = Bookshell(
         mId=data['mId'],
-        bId=unique_bId
     )
 
     # 新增到資料庫
