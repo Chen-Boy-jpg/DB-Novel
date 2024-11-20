@@ -58,7 +58,6 @@ const Bookshell = () => {
               w={"100%"}
               bgColor={"white"}
               display={"flex"}
-              //   justifyContent={"space-around"}
               shadow={"lg"}
               borderRadius={"1rem"}
               alignItems={"center"}
@@ -72,7 +71,7 @@ const Bookshell = () => {
               <Card />
               <Card />
               <Card />
-            </Box>{" "}
+            </Box>
           </>
         ) : (
           <Button
