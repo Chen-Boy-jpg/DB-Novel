@@ -4,7 +4,7 @@ import React from "react";
 const Card = () => {
   return (
     <Box
-      w={"20rem"}
+      w={"15rem"}
       shadow={"lg"}
       borderRadius={"2rem"}
       bgColor={"white"}
