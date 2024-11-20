@@ -13,15 +13,18 @@ import {
   DrawerContent,
   DrawerCloseButton,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { getProfile, logout } from "./service/request";
+import { createAuthor, getAuthor, getProfile, logout } from "./service/request";
 import { useMutation, useQuery } from "react-query";
 import { useRouter } from "next/router";
 
 const Header = () => {
+  const toast = useToast();
   const router = useRouter();
   const leftDrawer = useDisclosure(); // 控制左侧 Drawer 的状态
+  const [authorTrigger, setAuthorTrigger] = useState(true);
   const { data } = useQuery("member", getProfile, {
     onSuccess: (res) => {
       localStorage.setItem("memberData", JSON.stringify(res));
@@ -29,7 +32,30 @@ const Header = () => {
     retry: false,
   });
 
-  const logoutMutation = useMutation(["logout"], logout, { retry: false });
+  const logoutMutation = useMutation(["logout"], logout, {
+    retry: false,
+    onSuccess: () => router.push("/login"),
+  });
+
+  const authorMutation = useMutation(["author"], createAuthor, {
+    retry: false,
+    onSuccess: (res) => {
+      toast({
+        title: "創建成功",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    },
+  });
+
+  const {} = useQuery("author", () => getAuthor(), {
+    retry: false,
+    onSuccess: (res) => {
+      const author = res.authors.find((author) => author.aName === data?.mName);
+      if (author) setAuthorTrigger(false);
+    },
+  });
 
   return (
     <Box
@@ -60,27 +86,44 @@ const Header = () => {
       </Button>
 
       <Input w={"30%"} bgColor={"#ECEFF6"} />
-
-      <Button
-        display={"flex"}
-        alignItems={"center"}
-        gap={"1rem"}
-        h={"90%"}
-        variant={"outline"}
-        borderRadius={"3rem"}
-        color={"#3AB19B"}
-        fontSize={"2.5rem"}
-        onClick={() => {
-          if (window.confirm("確定要登出??")) logoutMutation.mutate();
-        }}
-      >
-        <Avatar>
-          <AvatarBadge boxSize="1.25em" bg="green.500" />
-        </Avatar>
-        <Box fontSize={"1.5rem"} fontWeight={600}>
-          {data?.mName}
-        </Box>
-      </Button>
+      <Box display={"flex"} gap={"1rem"} h={"100%"} alignItems={"center"}>
+        <Button
+          display={"flex"}
+          alignItems={"center"}
+          gap={"1rem"}
+          h={"90%"}
+          variant={"outline"}
+          borderRadius={"3rem"}
+          color={"#3AB19B"}
+          fontSize={"1.5rem"}
+          disabled={!authorTrigger}
+          onClick={() => authorMutation.mutate(data?.mName)}
+        >
+          一鍵成為創作者
+        </Button>
+        <Button
+          display={"flex"}
+          alignItems={"center"}
+          gap={"1rem"}
+          h={"90%"}
+          variant={"outline"}
+          borderRadius={"3rem"}
+          color={"#3AB19B"}
+          fontSize={"2.5rem"}
+          onClick={() => {
+            if (window.confirm("確定要登出??")) {
+              logoutMutation.mutate();
+            }
+          }}
+        >
+          <Avatar>
+            <AvatarBadge boxSize="1.25em" bg="green.500" />
+          </Avatar>
+          <Box fontSize={"1.5rem"} fontWeight={600}>
+            {data?.mName}
+          </Box>
+        </Button>
+      </Box>
 
       <Drawer
         isOpen={leftDrawer.isOpen}
@@ -109,6 +152,7 @@ const Header = () => {
               fontSize={"2rem"}
               fontWeight={"600"}
               variant={"ghost"}
+              onClick={() => router.push("/home")}
             >
               Home
             </Button>
@@ -122,6 +166,19 @@ const Header = () => {
               onClick={() => router.push("/bookshell")}
             >
               Bookshell
+            </Button>
+
+            <Button
+              h={"5rem"}
+              w={"100%"}
+              bgColor={"white"}
+              fontSize={"2rem"}
+              fontWeight={"600"}
+              variant={"ghost"}
+              onClick={() => router.push("/author")}
+              disabled={authorTrigger}
+            >
+              Author
             </Button>
           </DrawerBody>
         </DrawerContent>
