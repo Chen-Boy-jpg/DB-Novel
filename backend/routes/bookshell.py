@@ -31,7 +31,7 @@ def get_bookshells():
 
 @bookshell_bp.route('/new', methods=['POST'])
 def add_bookshells()->dict:
-    data = request.get_json()['data']  
+    data = request.get_json()  
     if not data:
         return jsonify({'error': 'No input data provided'}), 400
 
