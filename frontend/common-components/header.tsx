@@ -60,7 +60,7 @@ const Header = () => {
   return (
     <Box
       w={"95%"}
-      h={"5rem"}
+      h={"4.5rem"}
       borderRadius={"3rem"}
       bgColor={"white"}
       position={"fixed"}

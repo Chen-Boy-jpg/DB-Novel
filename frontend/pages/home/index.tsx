@@ -1,11 +1,13 @@
 import React from "react";
 import { useQuery } from "react-query";
-import { getProfile } from "./service";
+import { getAllNovel, getProfile } from "./service";
 import { Box, HStack } from "@chakra-ui/react";
 import Card from "./components/card";
 
 const Home = () => {
-  //   const {} = useQuery(["profile"], getProfile);
+  const { data } = useQuery(["profile"], getAllNovel, { retry: false });
+
+  console.log(data);
   return (
     <HStack w={"100%"} h={"100%"} bgColor={"#ECEFF6"} pt={"10rem"}>
       <Box
