@@ -7,3 +7,7 @@ export const getProfile = async () => {
 export const getAllNovel = async () => {
   return request(`/novel/`, {}).then((r) => r);
 };
+
+export const getAllAuthor = async () => {
+  return request(`/author/`, {}).then((r) => r);
+};

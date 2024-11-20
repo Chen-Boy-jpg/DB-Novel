@@ -1,13 +1,14 @@
 import React from "react";
 import { useQuery } from "react-query";
-import { getAllNovel, getProfile } from "./service";
+import { getAllNovel, getAllAuthor, getProfile } from "./service";
 import { Box, HStack } from "@chakra-ui/react";
 import Card from "./components/card";
 
 const Home = () => {
-  const { data } = useQuery(["profile"], getAllNovel, { retry: false });
-
-  console.log(data);
+  const { data } = useQuery(["novel"], getAllNovel, { retry: false });
+  const { data: authorList } = useQuery(["author"], getAllAuthor, {
+    retry: false,
+  });
   return (
     <HStack w={"100%"} h={"100%"} bgColor={"#ECEFF6"} pt={"10rem"}>
       <Box
@@ -29,40 +30,9 @@ const Home = () => {
           alignItems={"center"}
           p={10}
         >
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-        </Box>
-        <Box
-          w={"70%"}
-          bgColor={"white"}
-          display={"flex"}
-          justifyContent={"space-around"}
-          shadow={"lg"}
-          borderRadius={"1rem"}
-          alignItems={"center"}
-          p={10}
-        >
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-        </Box>
-        <Box
-          w={"70%"}
-          bgColor={"white"}
-          display={"flex"}
-          justifyContent={"space-around"}
-          shadow={"lg"}
-          borderRadius={"1rem"}
-          alignItems={"center"}
-          p={10}
-        >
-          <Card />
-          <Card />
-          <Card />
-          <Card />
+          {data?.novel.map((item) => (
+            <Card data={item} authors={authorList?.authors} />
+          ))}
         </Box>
       </Box>
     </HStack>

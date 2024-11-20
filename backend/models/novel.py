@@ -18,7 +18,7 @@ class Novel(db.Model, UserMixin):
             return {
                 'nId': str(self.nId),  # 返回 mId 轉為字串
                 'chapter': self.chapter,
-                'aId':self.chapter,
+                'aId':self.aId,
                 'desc': self.desc,
                 'nName': self.nName,
                 'isSubscribe':self.isSubscribe,
