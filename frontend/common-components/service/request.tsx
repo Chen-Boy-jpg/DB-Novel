@@ -7,3 +7,11 @@ export const getProfile = async () => {
 export const logout = async () => {
   return postWithResponse(`/member/logout`, {}).then((r) => r);
 };
+
+export const createAuthor = async (name: string) => {
+  return postWithResponse(`/author/new`, { aName: name }).then((r) => r);
+};
+
+export const getAuthor = async () => {
+  return request(`/author`, {}).then((r) => r);
+};
