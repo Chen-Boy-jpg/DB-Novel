@@ -21,12 +21,14 @@ const Home = () => {
         alignItems={"center"}
       >
         <Box
-          w={"70%"}
+          w={"100%"}
           bgColor={"white"}
           display={"flex"}
-          justifyContent={"space-around"}
+          justifyContent={"flex-start"}
+          flexWrap={"wrap"}
           shadow={"lg"}
           borderRadius={"1rem"}
+          gap={"1rem"}
           alignItems={"center"}
           p={10}
         >

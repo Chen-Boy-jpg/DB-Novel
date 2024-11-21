@@ -7,3 +7,7 @@ export const getAllNovel = async (id: string): Promise<any> => {
 export const getNovelWithAuthor = async (name: string): Promise<any> => {
   return request(`/novel/${name}`, {}).then((r) => r);
 };
+
+export const createNovel=async (data): Promise<any> => {
+  return postWithResponse(`/novel/`, {data}).then((r) => r);
+};

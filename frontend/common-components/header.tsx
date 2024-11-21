@@ -72,6 +72,7 @@ const Header = () => {
       pl={2}
       pr={2}
       shadow={"base"}
+      zIndex={"9999"}
     >
       <Button
         variant={"outline"}

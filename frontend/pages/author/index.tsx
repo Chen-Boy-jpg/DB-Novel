@@ -16,14 +16,18 @@ import {
   FormErrorMessage,
   FormHelperText,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import Card from "./components/card.tsx";
-import { useQuery } from "react-query";
-import { getNovelWithAuthor } from "./service/request";
+import { useMutation, useQuery } from "react-query";
+import { createNovel, getNovelWithAuthor } from "./service/request";
 import { getAllAuthor } from "../home/service/";
 
 export const Author = () => {
+  const toast = useToast();
+  const [desc, setDesc] = useState("");
+  const [nName, setnName] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { data: authorList } = useQuery(["author"], getAllAuthor, {
     retry: false,
@@ -41,6 +45,25 @@ export const Author = () => {
       onSuccess: (res) => {},
     }
   );
+
+  const createNovelMutation = useMutation(["novel"], createNovel, {
+    onSuccess: (res) => {
+      toast({
+        title: "新增成功",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    },
+    onError: (err) => {
+      toast({
+        title: "新增失敗",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    },
+  });
   return (
     <HStack
       w={"100%"}
@@ -73,9 +96,10 @@ export const Author = () => {
           w={"100%"}
           bgColor={"white"}
           display={"flex"}
-          justifyContent={"center"}
+          justifyContent={"flex-start"}
           gap={"1rem"}
           alignItems={"center"}
+          flexWrap={"wrap"}
           p={10}
         >
           {novelList?.novels.map((item) => (
@@ -91,22 +115,40 @@ export const Author = () => {
             <ModalHeader>新增小說</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <FormControl>
+              <FormControl w={"50%"}>
                 <FormLabel>小說名稱</FormLabel>
-                <Input />
-              </FormControl>
-              <FormControl>
-                <FormLabel>章節</FormLabel>
-                <Input />
+                <Input onChange={(e) => setnName(e.target.value)} />
               </FormControl>
               <FormControl>
                 <FormLabel>小說敘述</FormLabel>
-                <Textarea />
+                <Textarea onChange={(e) => setDesc(e.target.value)} />
               </FormControl>
             </ModalBody>
 
             <ModalFooter>
-              <Button type="submit" colorScheme="blue" mr={3} onClick={onClose}>
+              <Button
+                isLoading={createNovelMutation.isLoading}
+                colorScheme="blue"
+                mr={3}
+                onClick={() => {
+                  const memberData = localStorage.getItem("memberData");
+                  const parsedData = JSON.parse(memberData as string);
+                  const aId = authorList.authors.find(
+                    (item) => item.aName == parsedData.mName
+                  ).aId;
+                  const data = {
+                    chapter: "1",
+                    aId: aId,
+                    desc: desc,
+                    nName: nName,
+                    isSubscribe: true,
+                  };
+                  createNovelMutation.mutate(data);
+                  setDesc("");
+                  setnName("");
+                  onClose();
+                }}
+              >
                 送出
               </Button>
               <Button variant={"solid"} mr={3} onClick={onClose}>
