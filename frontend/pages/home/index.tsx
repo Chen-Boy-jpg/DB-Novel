@@ -21,7 +21,7 @@ const Home = () => {
         alignItems={"center"}
       >
         <Box
-          w={"100%"}
+          w={"80%"}
           bgColor={"white"}
           display={"flex"}
           justifyContent={"flex-start"}

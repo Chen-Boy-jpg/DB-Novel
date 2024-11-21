@@ -5,20 +5,91 @@ import {
   HStack,
   Image,
   Text,
-  VStack,
   Divider,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  Input,
+  FormControl,
+  FormLabel,
+  Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { getAllAuthor } from "../home/service";
+import { deleteNovel, updateNovel } from "./service/request";
+import { useState } from "react";
 
 const NovelPage = () => {
   const router = useRouter();
+  const toast = useToast();
   const { data } = router.query;
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const { data: authorList } = useQuery(["author"], getAllAuthor, {
     retry: false,
   });
   const parsedData = data ? JSON.parse(data as string) : {};
+  const [desc, setDesc] = useState(parsedData?.desc);
+  const [nName, setnName] = useState(parsedData?.nName);
+  const deleteMutation = useMutation({
+    mutationFn: ({ nId, chapter }: { nId: string; chapter: string }) =>
+      deleteNovel(nId, chapter),
+    retry: false,
+    onSuccess: (res) => {
+      toast({
+        title: "刪除成功",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      router.push("/author");
+    },
+    onError: (error) => {
+      toast({
+        title: "刪除失敗",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    },
+  });
+  const updateMutation = useMutation({
+    mutationFn: ({
+      data,
+      nId,
+      chapter,
+    }: {
+      data: any;
+      nId: string;
+      chapter: string;
+    }) => updateNovel(data, nId, chapter),
+    retry: false,
+    onSuccess: (res) => {
+      toast({
+        title: "更改成功",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+
+      router.push("/author");
+    },
+    onError: (error) => {
+      toast({
+        title: "更改失敗",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    },
+  });
 
   return (
     <Box
@@ -105,9 +176,9 @@ const NovelPage = () => {
         <Divider borderColor="gray.300" mb={6} />
 
         {/* 按鈕操作 */}
-        <VStack spacing={4}>
+        <HStack spacing={4}>
           <Button
-            colorScheme="teal"
+            colorScheme="blue"
             size="lg"
             w="full"
             onClick={() => router.push("/home")}
@@ -115,15 +186,75 @@ const NovelPage = () => {
             返回小說列表
           </Button>
           <Button
-            colorScheme="blue"
+            colorScheme="red"
             size="lg"
             w="full"
-            onClick={() => alert(`前往章節: ${parsedData.chapter}`)}
+            onClick={() => {
+              window.confirm("確定要刪除小說??");
+              deleteMutation.mutate({
+                nId: parsedData?.nId,
+                chapter: parsedData?.chapter,
+              });
+            }}
           >
-            閱讀章節 {parsedData.chapter}
+            刪除小說
           </Button>
-        </VStack>
+          <Button colorScheme="green" size="lg" w="full" onClick={onOpen}>
+            更改內容
+          </Button>
+        </HStack>
       </Box>
+      <Modal isOpen={isOpen} onClose={onClose} size={"6xl"}>
+        <ModalOverlay />
+        <ModalContent>
+          <form>
+            <ModalHeader>新增小說</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <FormControl w={"50%"}>
+                <FormLabel>小說名稱</FormLabel>
+                <Input
+                  defaultValue={parsedData?.nName}
+                  onChange={(e) => setnName(e.target.value)}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel>小說敘述</FormLabel>
+                <Textarea
+                  defaultValue={parsedData?.desc}
+                  onChange={(e) => setDesc(e.target.value)}
+                />
+              </FormControl>
+            </ModalBody>
+
+            <ModalFooter>
+              <Button
+                isLoading={updateMutation.isLoading}
+                colorScheme="blue"
+                mr={3}
+                onClick={() => {
+                  const data = {
+                    desc: desc,
+                    nName: nName,
+                  };
+                  updateMutation.mutate({
+                    data: data,
+                    nId: parsedData?.nId,
+                    chapter: parsedData?.chapter,
+                  });
+
+                  onClose();
+                }}
+              >
+                送出
+              </Button>
+              <Button variant={"solid"} mr={3} onClick={onClose}>
+                關閉
+              </Button>
+            </ModalFooter>
+          </form>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 };
