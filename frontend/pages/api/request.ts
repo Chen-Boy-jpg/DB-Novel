@@ -125,6 +125,26 @@ export const put = <T>(
     data: payload,
   });
 
+export const putWithResponse = async <T>(
+  endpoint: string,
+  payload: T,
+  removeApiSuffix: boolean = false
+): Promise<any> => {
+  try {
+    const response = await requestWithTimeout(50000, removeApiSuffix).bind(
+      null,
+      endpoint,
+      {
+        method: "PUT",
+        data: payload,
+      }
+    )();
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const post = <T>(
   endpoint: string,
   payload: T,

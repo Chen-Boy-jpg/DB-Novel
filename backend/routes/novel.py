@@ -25,7 +25,7 @@ def handle_novels():
     
     elif request.method == 'POST':
         # 處理 POST 請求
-        data = request.get_json()  # 從請求中提取 JSON 資料
+        data = request.get_json()['data']  # 從請求中提取 JSON 資料
         if not data:
             return jsonify({'status': 'error', 'message': 'No input data provided'}), 400
 
@@ -78,38 +78,64 @@ def get_novels_by_author(aName):
 @novel_bp.route('/delete', methods=['DELETE'])
 def delete_novel():
     # 從請求中提取 JSON 資料
-    data = request.get_json()
-    if not data:
-        return jsonify({'error': 'No input data provided'}), 400
+    nId = request.args.get('nId')  
+    chapter = request.args.get('chapter')
+    if not nId or not chapter:
+        return jsonify({'error': 'Both nId and chapter are required.'}), 400
+    
+    if not is_valid_uuid(nId):
+        return jsonify({'error': 'Invalid UUID format for nId.'}), 400
 
-    # 檢查必填欄位是否存在
-    required_fields = ['nId', 'chapter']
-    for field in required_fields:
-        if field not in data:
-            return jsonify({'error': f'Missing field: {field}'}), 400
-
-    # 驗證 UUID 格式
-    for field in required_fields:
-        if field == 'nId' and not is_valid_uuid(data[field]):
-            return jsonify({'error': f'Invalid UUID format for {field}.'}), 400
-
-    # 查詢該筆紀錄
-    novel = Novel.query.filter_by(
-        nId=data['nId'],
-        chapter=data['chapter']
-    ).first()
+    novel = Novel.query.filter_by(nId=nId, chapter=chapter).first()
 
     # 如果找不到紀錄
     if not novel:
-        return jsonify({'error': 'Collection not found.'}), 404
+        return jsonify({'error': 'Novel not found.'}), 404
 
     # 刪除該紀錄
     try:
         db.session.delete(novel)
         db.session.commit()
-        return jsonify({'message': 'Collection deleted successfully!'}), 200
+        return jsonify({'message': 'Novel deleted successfully!'}), 200
     except Exception as e:
         db.session.rollback()  # 回滾以防止錯誤
         return jsonify({'error': str(e)}), 500
 
 
+@novel_bp.route('/put', methods=['PUT'])
+def put_novel():
+    # 從查詢參數中提取 nId 和 chapter
+    nId = request.args.get('nId')  
+    chapter = request.args.get('chapter')
+
+    # 驗證 nId 和 chapter 是否存在
+    if not nId or not chapter:
+        return jsonify({'error': 'Both nId and chapter are required.'}), 400
+    
+    # 驗證 UUID 格式
+    if not is_valid_uuid(nId):
+        return jsonify({'error': 'Invalid UUID format for nId.'}), 400
+
+    # 從請求中提取 JSON 資料
+    data = request.get_json()['data']
+    if not data:
+        return jsonify({'error': 'No input data provided.'}), 400
+
+    # 查詢記錄
+    novel = Novel.query.filter_by(nId=nId, chapter=chapter).first()
+
+    # 如果找不到記錄
+    if not novel:
+        return jsonify({'error': 'Novel not found.'}), 404
+
+    # 更新記錄
+    try:
+        # 根據請求資料更新欄位，以下是假設更新 title 和 content
+        novel.desc = data.get('desc', novel.desc)  # 如果資料有提供 title，則更新；否則保持原值
+        novel.nName = data.get('nName', novel.nName)
+
+        db.session.commit()  # 提交更改
+        return jsonify({'message': 'Novel updated successfully!'}), 200
+    except Exception as e:
+        db.session.rollback()  # 回滾以防止錯誤
+        return jsonify({'error': str(e)}), 500
