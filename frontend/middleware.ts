@@ -5,10 +5,8 @@ export function middleware(req) {
   const cookie = req.cookies.get("session"); // 假設 session 是你的登入狀態的 cookie
 
   if (pathname === "/") {
-    if (!cookie) {
-      return NextResponse.redirect(new URL("/login", req.url));
-    }
-    return NextResponse.next();
+    
+    return NextResponse.redirect(new URL("/login", req.url));
   }
 
   if (pathname === "/login" && cookie) {
