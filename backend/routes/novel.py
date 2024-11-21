@@ -3,9 +3,16 @@ from flask_login import login_user, login_required, current_user,LoginManager
 from models.novel import Novel
 from models import db
 from models.author import Author
+import uuid
 
 novel_bp = Blueprint('novel', __name__)
 
+def is_valid_uuid(value):
+    try:
+        uuid.UUID(str(value))
+        return True
+    except ValueError:
+        return False
 
 @novel_bp.route('/', methods=['GET', 'POST'])
 def handle_novels():
@@ -66,5 +73,43 @@ def get_novels_by_author(aName):
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
+
+@novel_bp.route('/delete', methods=['DELETE'])
+def delete_novel():
+    # 從請求中提取 JSON 資料
+    data = request.get_json()
+    if not data:
+        return jsonify({'error': 'No input data provided'}), 400
+
+    # 檢查必填欄位是否存在
+    required_fields = ['nId', 'chapter']
+    for field in required_fields:
+        if field not in data:
+            return jsonify({'error': f'Missing field: {field}'}), 400
+
+    # 驗證 UUID 格式
+    for field in required_fields:
+        if field == 'nId' and not is_valid_uuid(data[field]):
+            return jsonify({'error': f'Invalid UUID format for {field}.'}), 400
+
+    # 查詢該筆紀錄
+    novel = Novel.query.filter_by(
+        nId=data['nId'],
+        chapter=data['chapter']
+    ).first()
+
+    # 如果找不到紀錄
+    if not novel:
+        return jsonify({'error': 'Collection not found.'}), 404
+
+    # 刪除該紀錄
+    try:
+        db.session.delete(novel)
+        db.session.commit()
+        return jsonify({'message': 'Collection deleted successfully!'}), 200
+    except Exception as e:
+        db.session.rollback()  # 回滾以防止錯誤
+        return jsonify({'error': str(e)}), 500
 
 
