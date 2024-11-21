@@ -28,7 +28,7 @@ const NovelPage = () => {
       display="flex"
       justifyContent="center"
       alignItems="center"
-      p={5}
+      p={"5rem"}
     >
       <Box
         w={["90%", "80%", "60%"]}

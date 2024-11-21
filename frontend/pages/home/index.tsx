@@ -31,7 +31,7 @@ const Home = () => {
           p={10}
         >
           {data?.novel.map((item) => (
-            <Card data={item} authors={authorList?.authors} />
+            <Card key={item.aId} data={item} authors={authorList?.authors} />
           ))}
         </Box>
       </Box>
