@@ -17,7 +17,7 @@ def is_valid_uuid(value):
         return False
 
 @collection_bp.route('/', methods=['GET'])
-def get_bookshells():
+def get_collections():
     collections = Collection.query.all()
     collections_list = [collection.to_dict() for collection in collections]
     return jsonify({'collections': collections_list})
@@ -29,7 +29,7 @@ def add_collections()->dict:
         return jsonify({'error': 'No input data provided'}), 400
 
     # 驗證必填欄位
-    required_fields = ['mId','bId','nId','chapter','time']
+    required_fields = ['mId','bId','nId','chapter']
     for field in required_fields:
         if field not in data:
             return jsonify({'error': f'Missing field: {field}'}), 400
@@ -50,7 +50,7 @@ def add_collections()->dict:
         bId=data['bId'],
         nId=data['nId'],
         chapter=data['chapter'],
-        time=parsed_time
+        time = parsed_time
     )
 
     # 新增到資料庫
@@ -98,4 +98,26 @@ def delete_collection():
     except Exception as e:
         db.session.rollback()  # 回滾以防止錯誤
         return jsonify({'error': str(e)}), 500
+    
+@collection_bp.route('/bookshell_data', methods=['GET'])
+def get_bookshell_data():
+    # 從請求中提取參數
+    m_id = request.args.get('mId')
+
+    if not m_id:
+        return jsonify({'error': 'mId is required.'}), 400
+
+    # 驗證 UUID 格式
+    if not is_valid_uuid(m_id):
+        return jsonify({'error': 'Invalid UUID format for mId.'}), 400
+
+    # 查詢對應的 collection 資料
+    collections = Collection.query.filter_by(mId=m_id).all()
+
+    if not collections:
+        return jsonify({'message': 'No books found for the provided mId.'}), 404
+
+    # 將結果轉換為字典
+    books_data = [{'nId': col.nId, 'chapter': col.chapter} for col in collections]
+    return jsonify({'books': books_data}), 200
     
