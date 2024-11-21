@@ -6,7 +6,7 @@ const Card = ({ data, authors }) => {
   const router = useRouter();
   return (
     <Button
-      w={"20%"}
+      w={"15%"}
       h={"100%"}
       shadow={"lg"}
       borderRadius={"2rem"}
