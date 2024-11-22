@@ -5,7 +5,7 @@ from routes.author import author_bp
 from routes.bookshell import bookshell_bp
 from routes.collection import collection_bp
 from routes.read import read_bp
-from routes.subscrible import subscrible_bp
+from routes.Subscribe import subscribe_bp
 
 api_bp = Blueprint('api', __name__)
 api_bp.register_blueprint(member_bp, url_prefix='/member')
@@ -14,7 +14,7 @@ api_bp.register_blueprint(author_bp, url_prefix='/author')
 api_bp.register_blueprint(bookshell_bp, url_prefix='/bookshell')
 api_bp.register_blueprint(collection_bp, url_prefix='/collection')
 api_bp.register_blueprint(read_bp, url_prefix='/read')
-api_bp.register_blueprint(subscrible_bp, url_prefix='/subscrible')
+api_bp.register_blueprint(subscribe_bp, url_prefix='/subscribe')
 
 
 
