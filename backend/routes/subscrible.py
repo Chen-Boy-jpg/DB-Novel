@@ -1,5 +1,4 @@
 from flask import Blueprint, jsonify, request
-from flask_login import login_user, login_required, current_user,LoginManager,logout_user
 from models.subscrible import Subscrible
 from models import db
 import uuid
@@ -19,7 +18,8 @@ def get_subscribles():
     subscribles_list = [subscrible.to_dict() for subscrible in subscribles]
     return jsonify({'Subscrible': subscribles_list})
 
-@subscrible_bp.route('/new', methods=['POST'])
+#訂閱、解除訂閱
+@subscrible_bp.route('/Change_subscrible', methods=['POST'])
 def add_subscribles()->dict:
     data = request.get_json()  # 從請求中提取 JSON 資料
     if not data:
@@ -31,11 +31,14 @@ def add_subscribles()->dict:
         if field not in data:
             return jsonify({'error': f'Missing field: {field}'}), 400
     
-    for field in ['mId' , 'nId']:
-        if not is_valid_uuid(data[field]):
-            return jsonify({'error': f'Invalid UUID format for {field}.'}), 400
-    
 
+    existing = Subscrible.query.filter_by(mId=data['mId'], aId=data['aId']).first()
+    
+    # 若記錄已存在，則更新訂閱狀態
+    if existing:
+        existing.isSubscribe = data['isSubscribe']  # 更新訂閱狀態
+        db.session.commit()
+        return jsonify({'message': 'Subscription updated successfully!', 'collection': existing.to_dict()}), 200
 
     # 建立新的subscrible紀錄
     new_subscrible = Subscrible(
