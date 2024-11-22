@@ -19,7 +19,7 @@ def get_subscribles():
     return jsonify({'Subscrible': subscribles_list})
 
 #訂閱、解除訂閱
-@subscrible_bp.route('/Change_subscrible', methods=['POST'])
+@subscrible_bp.route('/subscrible', methods=['POST'])
 def add_subscribles()->dict:
     data = request.get_json()  # 從請求中提取 JSON 資料
     if not data:

@@ -1,0 +1,248 @@
+[33mcommit 6cf460cd950dc64ec59d553f4266b52e95c17b81[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32msubscrible[m[33m)[m
+Author: unknown <akwan60608@gmail.com>
+Date:   Fri Nov 22 12:19:04 2024 +0800
+
+    Subscrible&Unsubscrible
+
+[33mcommit 7d91d867adb4506bffa604b6229063696c2e2d22[m[33m ([m[1;31morigin/subscrible[m[33m)[m
+Author: unknown <akwan60608@gmail.com>
+Date:   Thu Nov 21 23:35:54 2024 +0800
+
+    訂閱
+
+[33mcommit da8f2d327537626f4c0215ce3ba93a4be0eed5d0[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Merge: ab83f3e b1c44ff
+Author: Chen-Boy-jpg <73468408+Chen-Boy-jpg@users.noreply.github.com>
+Date:   Thu Nov 21 22:21:14 2024 +0800
+
+    Merge pull request #16 from Chen-Boy-jpg/fix/router
+    
+    fix(login): fix root route redirect to /login
+
+[33mcommit b1c44ff212f4c499259257a8a3a174c5f0c8d240[m
+Author: unknown <yyy71243@gmail.com>
+Date:   Thu Nov 21 22:20:39 2024 +0800
+
+    fix(login): fix root route redirect to /login
+
+[33mcommit ab83f3e99915f2a0690175c67f22e773e6eff474[m
+Merge: 4dd7101 ba7b1d8
+Author: Chen-Boy-jpg <73468408+Chen-Boy-jpg@users.noreply.github.com>
+Date:   Thu Nov 21 02:15:37 2024 +0800
+
+    Merge pull request #15 from Chen-Boy-jpg/feat/novel-api-contact
+    
+    feat(novel): add novel page ui and api then connect them
+
+[33mcommit ba7b1d8630456b67b6f1d3299c1e439fe8570f31[m
+Author: DESKTOP-32DSEHK\yyy71 <yyy71243@gmail.com>
+Date:   Thu Nov 21 02:14:03 2024 +0800
+
+    feat(novel): add novel page ui and api then connect them
+
+[33mcommit 4dd710125b4002b348eff0b6cffcb5e097ad91ec[m
+Merge: 65541dc 6354f7e
+Author: Chen-Boy-jpg <73468408+Chen-Boy-jpg@users.noreply.github.com>
+Date:   Wed Nov 20 18:54:44 2024 +0800
+
+    Merge pull request #14 from Chen-Boy-jpg/fix/modify
+    
+    fix:modify
+
+[33mcommit 6354f7ea0205afd4090d1cd02f412c492d59ac9b[m
+Author: unknown <yyy71243@gmail.com>
+Date:   Wed Nov 20 18:54:07 2024 +0800
+
+    fix:modify
+
+[33mcommit 65541dce55ad7d35447ec917431bb0f129424453[m
+Merge: 28245f9 f04748d
+Author: Chen-Boy-jpg <73468408+Chen-Boy-jpg@users.noreply.github.com>
+Date:   Wed Nov 20 15:53:00 2024 +0800
+
+    Merge pull request #13 from Chen-Boy-jpg/feat/author-api
+    
+    Feat/author api
+
+[33mcommit f04748de3b64eeb7c3d612dde89d8efc994af524[m
+Author: DESKTOP-32DSEHK\yyy71 <yyy71243@gmail.com>
+Date:   Wed Nov 20 15:52:19 2024 +0800
+
+    feat(author): add frontend ui
+
+[33mcommit a0d870f40fc0794e8b5b608a6c0b1e896b90e3e1[m
+Author: DESKTOP-32DSEHK\yyy71 <yyy71243@gmail.com>
+Date:   Wed Nov 20 15:51:46 2024 +0800
+
+    feat(author): add author backend and frontend
+
+[33mcommit 28245f9afafa0f687cae4c6ed32e6173b0b346b8[m
+Merge: 421ecb8 7ee0454
+Author: Chen-Boy-jpg <73468408+Chen-Boy-jpg@users.noreply.github.com>
+Date:   Wed Nov 20 03:22:55 2024 +0800
+
+    Merge pull request #12 from Chen-Boy-jpg/feat/bookshell-front-back
+    
+    feat(bookshell): add frontend backend bookshell ui and api
+
+[33mcommit 7ee045485f73ed7d3765da6b84c6f0903f7ab595[m
+Author: unknown <yyy71243@gmail.com>
+Date:   Wed Nov 20 03:21:56 2024 +0800
+
+    feat(bookshell): add frontend backend bookshell ui and api
+
+[33mcommit 421ecb88d12a5f23d854d547f0e7ead3bfd45e6d[m
+Merge: f6c4cc6 1fe8fca
+Author: torby226990 <torby226990@gmail.com>
+Date:   Wed Nov 20 00:12:09 2024 +0800
+
+    Merge pull request #10 from Chen-Boy-jpg/feat/readapi
+    
+    read.new
+
+[33mcommit 1fe8fca6f22f8128205571e4cbfddba6dff955a1[m[33m ([m[1;31morigin/feat/readapi[m[33m)[m
+Author: unknown <torby226990@gmail.com>
+Date:   Wed Nov 20 00:07:39 2024 +0800
+
+    read.new
+
+[33mcommit f6c4cc6fbff696df9ee60d3642de27de8140441c[m
+Merge: 387b8c4 99e8a82
+Author: Chen-Boy-jpg <73468408+Chen-Boy-jpg@users.noreply.github.com>
+Date:   Tue Nov 19 02:17:46 2024 +0800
+
+    Merge pull request #9 from Chen-Boy-jpg/feat/home-ui
+    
+    modify app.py
+
+[33mcommit 99e8a826801b937d29b69a035f734a4dee532ace[m
+Author: unknown <yyy71243@gmail.com>
+Date:   Tue Nov 19 02:16:46 2024 +0800
+
+    modify app.py
+
+[33mcommit 387b8c4cb950f2688c5fe182943dd0bf191c1e24[m
+Merge: fa065e3 4405a03
+Author: Chen-Boy-jpg <73468408+Chen-Boy-jpg@users.noreply.github.com>
+Date:   Tue Nov 19 02:15:03 2024 +0800
+
+    Merge pull request #8 from Chen-Boy-jpg/feat/home-ui
+    
+    feat(home): add home page ui
+
+[33mcommit 4405a0365af3b01b433a497c1f81c5bc2efb68a8[m
+Author: unknown <yyy71243@gmail.com>
+Date:   Tue Nov 19 02:14:18 2024 +0800
+
+    feat(home): add home page ui
+
+[33mcommit fa065e3b2e2458af001853690a2a862d4a73ff93[m
+Merge: f42aa79 49fc717
+Author: torby226990 <torby226990@gmail.com>
+Date:   Tue Nov 19 00:16:15 2024 +0800
+
+    Merge pull request #7 from Chen-Boy-jpg/feat/backend-api
+    
+    feat: add api routes
+
+[33mcommit 49fc7176a654f56a27a169a6db10f77d78efa24d[m
+Author: unknown <torby226990@gmail.com>
+Date:   Tue Nov 19 00:15:28 2024 +0800
+
+    feat: add api routes
+
+[33mcommit f42aa79c01b86d295cbd808be10c6f3512320ba3[m
+Merge: 403584f 5896bcd
+Author: Chen-Boy-jpg <73468408+Chen-Boy-jpg@users.noreply.github.com>
+Date:   Mon Nov 18 21:17:37 2024 +0800
+
+    Merge pull request #6 from Chen-Boy-jpg/feat/regiest-api
+    
+    feat(regiest): add regiest api service
+
+[33mcommit 5896bcd26828b74a6fb172367de5a1ec3ebda24a[m
+Author: unknown <yyy71243@gmail.com>
+Date:   Mon Nov 18 21:16:51 2024 +0800
+
+    feat(regiest): add regiest api service
+
+[33mcommit 403584fb0689aca72fb67c047ce0ec33399baccd[m
+Merge: de9b430 fe1eb23
+Author: torby226990 <torby226990@gmail.com>
+Date:   Mon Nov 18 21:10:52 2024 +0800
+
+    Merge pull request #5 from Chen-Boy-jpg/feat/author-api
+    
+    add author api and novel api
+
+[33mcommit fe1eb23c3782a7b84fbc5b9afa0168cc9bc667de[m
+Author: unknown <torby226990@gmail.com>
+Date:   Mon Nov 18 21:03:44 2024 +0800
+
+    add author api and novel api
+
+[33mcommit de9b4306db33efc6fcc8c29883de91c31970aa27[m
+Merge: e117a2f 2f854e9
+Author: Chen-Boy-jpg <73468408+Chen-Boy-jpg@users.noreply.github.com>
+Date:   Mon Nov 18 15:27:25 2024 +0800
+
+    Merge pull request #4 from Chen-Boy-jpg/feat/login-backend
+    
+    add login verification
+
+[33mcommit 2f854e910f399358ddaffc61158d833b0858bd51[m[33m ([m[1;31morigin/feat/login-backend[m[33m)[m
+Author: unknown <yyy71243@gmail.com>
+Date:   Mon Nov 18 15:26:40 2024 +0800
+
+    add login verification
+
+[33mcommit e117a2fa89057db559797459af4e6b1891df5991[m
+Merge: d72c315 6bf3dd6
+Author: Chen-Boy-jpg <73468408+Chen-Boy-jpg@users.noreply.github.com>
+Date:   Sat Nov 16 23:09:30 2024 +0800
+
+    Merge pull request #3 from Chen-Boy-jpg/feat/regiest-animation
+    
+    add login and regiest transform animation
+
+[33mcommit 6bf3dd64e4a4abcdd7ab00cbdb5a0079547b2bda[m
+Author: unknown <yyy71243@gmail.com>
+Date:   Sat Nov 16 23:07:53 2024 +0800
+
+    add login and regiest transform animation
+
+[33mcommit d72c3151d7a07e12f4bba8a5f078e2e13ba62b2a[m
+Merge: 4bf736a 08e891f
+Author: Chen-Boy-jpg <73468408+Chen-Boy-jpg@users.noreply.github.com>
+Date:   Sat Nov 16 05:35:36 2024 +0800
+
+    Merge pull request #2 from Chen-Boy-jpg/fix/login-style
+    
+    fix(login): fix form css problem
+
+[33mcommit 08e891f76fd13a3faf818fb3524ace7ea3d93a19[m
+Author: DESKTOP-32DSEHK\yyy71 <yyy71243@gmail.com>
+Date:   Sat Nov 16 05:34:56 2024 +0800
+
+    fix(login): fix form css problem
+
+[33mcommit 4bf736ab8cba0fbe6f938e1c5251817123c6eebf[m
+Merge: 619f33b 6d2942b
+Author: Chen-Boy-jpg <73468408+Chen-Boy-jpg@users.noreply.github.com>
+Date:   Fri Nov 15 01:59:23 2024 +0800
+
+    Merge pull request #1 from Chen-Boy-jpg/feat/login-page
+    
+    feat(login):add login page ui and project setting
+
+[33mcommit 6d2942bf68cfea5392b3e89ab203ada7723cdfed[m
+Author: unknown <yyy71243@gmail.com>
+Date:   Fri Nov 15 01:58:06 2024 +0800
+
+    feat(login):add login page ui and project setting
+
+[33mcommit 619f33bb7e97f3b364928e28ee35f207661483fb[m
+Author: Chen-Boy-jpg <73468408+Chen-Boy-jpg@users.noreply.github.com>
+Date:   Thu Nov 14 21:54:36 2024 +0800
+
+    Initial commit
