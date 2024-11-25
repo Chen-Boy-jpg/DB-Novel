@@ -17,12 +17,15 @@ import {
   FormHelperText,
   Textarea,
   useToast,
+  Image,
+  Tag,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import Card from "./components/card.tsx";
 import { useMutation, useQuery } from "react-query";
-import { createNovel, getNovelWithAuthor } from "./service/request";
-import { getAllAuthor } from "../home/service/";
+import { createNovel, getNovelWithAuthor } from "../api/author.request";
+import { getAllAuthor } from "../api/home.request";
+import { MemberType, NovelType } from "../../libs/type/";
 
 export const Author = () => {
   const toast = useToast();
@@ -32,21 +35,33 @@ export const Author = () => {
   const { data: authorList } = useQuery(["author"], getAllAuthor, {
     retry: false,
   });
-  const { data: novelList } = useQuery(
+  const [memberData, setMemberData] = useState<MemberType>();
+  const [novelList, setNovelList] = useState<NovelType[]>([]);
+  const [currentNovel, setCurrentNovel] = useState<NovelType>({});
+
+  const {} = useQuery(
     ["novel-author"],
     () => {
       const memberData = localStorage.getItem("memberData");
       const parsedData = JSON.parse(memberData as string);
-
+      setMemberData(parsedData);
       return getNovelWithAuthor(parsedData?.mName);
     },
     {
       retry: false,
-      onSuccess: (res) => {},
+      onSuccess: (res) => {
+        setNovelList(res.novels);
+      },
     }
   );
 
-  const createNovelMutation = useMutation(["novel"], createNovel, {
+  const createNovelMutation = useMutation({
+    mutationFn: ({ data }: { data: any }) => {
+      const newList = [...novelList, data];
+
+      setNovelList(newList);
+      return createNovel(data);
+    },
     onSuccess: (res) => {
       toast({
         title: "新增成功",
@@ -54,6 +69,7 @@ export const Author = () => {
         duration: 3000,
         isClosable: true,
       });
+      console.log(res);
     },
     onError: (err) => {
       toast({
@@ -67,6 +83,7 @@ export const Author = () => {
   return (
     <HStack
       w={"100%"}
+      h={"100%"}
       bgColor={"#ECEFF6"}
       pt={"10rem"}
       pb={"1rem"}
@@ -91,20 +108,39 @@ export const Author = () => {
             ADD NOVEL
           </Button>
         </Box>
-
-        <Box
-          w={"100%"}
-          bgColor={"white"}
-          display={"flex"}
-          justifyContent={"flex-start"}
-          gap={"1rem"}
-          alignItems={"center"}
-          flexWrap={"wrap"}
-          p={10}
-        >
-          {novelList?.novels.map((item) => (
-            <Card key={item.aId} data={item} authors={authorList?.authors} />
-          ))}
+        <Box display={"flex"} gap={"1rem"}>
+          <Box
+            bgColor={"white"}
+            h={"100%"}
+            w={"20%"}
+            p={5}
+            display={"flex"}
+            flexDir={"column"}
+            alignItems={"center"}
+            gap={"1rem"}
+          >
+            <Image src="/IMG_8628.jpg" alt="" />
+            <Tag colorScheme="green" fontSize={"1rem"}>
+              {memberData?.mName}
+            </Tag>
+          </Box>
+          <Box
+            w={"100%"}
+            h={"80%"}
+            bgColor={"white"}
+            display={"flex"}
+            justifyContent={"flex-start"}
+            flexWrap={"wrap"}
+            shadow={"lg"}
+            borderRadius={"1rem"}
+            gap={"1rem"}
+            alignItems={"center"}
+            p={10}
+          >
+            {novelList?.map((item) => (
+              <Card key={item.desc} data={item} authors={authorList?.authors} />
+            ))}
+          </Box>
         </Box>
       </Box>
 
@@ -143,7 +179,9 @@ export const Author = () => {
                     nName: nName,
                     isSubscribe: true,
                   };
-                  createNovelMutation.mutate(data);
+
+                  createNovelMutation.mutate({ data });
+
                   setDesc("");
                   setnName("");
                   onClose();

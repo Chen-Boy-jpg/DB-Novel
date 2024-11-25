@@ -10,6 +10,7 @@ class Author(db.Model, UserMixin):
     aId = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     aName = db.Column(db.String)
     follower = db.Column(db.Integer)
+    novels = db.relationship('Novel', backref='author', lazy='dynamic')  
     
     def to_dict(self):
         return {

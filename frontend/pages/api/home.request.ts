@@ -1,4 +1,4 @@
-import { request, post, postWithResponse } from "../../api/request";
+import { request, post, postWithResponse } from "./request";
 
 export const getProfile = async () => {
   return request(`/member/profile`, {}).then((r) => r);

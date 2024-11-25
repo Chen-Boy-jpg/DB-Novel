@@ -1,9 +1,11 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_user, login_required, current_user,LoginManager
 from models.collection import Collection
+from models.novel import Novel
 from models import db
-from datetime import datetime
+from datetime import date
 import uuid
+from sqlalchemy import and_, or_
 
 
 collection_bp = Blueprint('collection', __name__)
@@ -24,7 +26,7 @@ def get_collections():
 
 @collection_bp.route('/new', methods=['POST'])
 def add_collections()->dict:
-    data = request.get_json()  # 從請求中提取 JSON 資料
+    data = request.get_json()['data']  # 從請求中提取 JSON 資料
     if not data:
         return jsonify({'error': 'No input data provided'}), 400
 
@@ -39,7 +41,7 @@ def add_collections()->dict:
             return jsonify({'error': f'Invalid UUID format for {field}.'}), 400
     
     try:
-        parsed_time = datetime.strptime(data['time'], "%Y-%m-%d").date()
+        today_date = date.today()
     except ValueError:
         return jsonify({'error': 'Invalid date format. Use YYYY-MM-DD.'}), 400
 
@@ -50,7 +52,7 @@ def add_collections()->dict:
         bId=data['bId'],
         nId=data['nId'],
         chapter=data['chapter'],
-        time = parsed_time
+        time = today_date
     )
 
     # 新增到資料庫
@@ -101,23 +103,40 @@ def delete_collection():
     
 @collection_bp.route('/bookshell_data', methods=['GET'])
 def get_bookshell_data():
-    # 從請求中提取參數
+ 
     m_id = request.args.get('mId')
 
+   
     if not m_id:
         return jsonify({'error': 'mId is required.'}), 400
 
-    # 驗證 UUID 格式
+   
     if not is_valid_uuid(m_id):
         return jsonify({'error': 'Invalid UUID format for mId.'}), 400
 
-    # 查詢對應的 collection 資料
-    collections = Collection.query.filter_by(mId=m_id).all()
+    try:
+        
+        collections = Collection.query.filter_by(mId=m_id).all()
 
-    if not collections:
-        return jsonify({'message': 'No books found for the provided mId.'}), 404
+        if not collections:
+            return jsonify({'message': 'No books found for the provided mId.'}), 404
 
-    # 將結果轉換為字典
-    books_data = [{'nId': col.nId, 'chapter': col.chapter} for col in collections]
-    return jsonify({'books': books_data}), 200
+        
+        books_data = [{'nId': col.nId, 'chapter': col.chapter} for col in collections]
+
+        
+        conditions = [
+            and_(Novel.nId == book['nId'], Novel.chapter == book['chapter'])
+            for book in books_data
+        ]
+        novels = Novel.query.filter(or_(*conditions)).all()
+
+      
+        novel_data = [novel.to_dict() for novel in novels]
+
+        return jsonify({'books': books_data, 'novels': novel_data}), 200
+
+    except Exception as e:
+        
+        return jsonify({'error': 'An error occurred while processing your request.', 'details': str(e)}), 500
     

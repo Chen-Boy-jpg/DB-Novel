@@ -39,8 +39,8 @@ const Card = ({ data, authors }) => {
         alignItems={"flex-start"}
         gap={"1rem"}
       >
-        <Box fontSize={"1.3rem"} fontWeight={600}>
-          {data.nName}
+        <Box fontSize={"1.3rem"} fontWeight={600} w={"100%"} isTruncated>
+          {data?.nName}
         </Box>
         <Box color={"#A8ABB4"} fontSize={"0.8rem"} fontWeight={600}>
           {authors?.find((author) => author.aId === data.aId).aName}

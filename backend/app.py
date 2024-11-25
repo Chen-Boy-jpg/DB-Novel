@@ -9,6 +9,8 @@ from flask_cors import CORS
 # 建立 Flask 應用程式
 app = Flask(__name__)
 app.config.from_object(Config)
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 
 # 初始化資料庫
 db.init_app(app)
@@ -26,4 +28,4 @@ with app.app_context():
 
 # 啟動伺服器
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000,debug=True)

@@ -2,13 +2,40 @@ import { Box, Button, HStack } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import Card from "./components/card";
 import { useMutation, useQuery } from "react-query";
-import { addBookshell, getBookshell } from "./service/request";
+import {
+  addBookshell,
+  getBookshell,
+  getCollectionBymId,
+} from "../api/bookshell.request";
+import { getAllAuthor } from "../api/home.request";
 
 const Bookshell = () => {
   const [id, setId] = useState("");
   const [bId, setBId] = useState(null);
+  const [trigger, setTrigger] = useState(false);
   const createMutation = useMutation(["bookshell"], addBookshell, {
-    onSuccess: () => {},
+    onSuccess: () => {
+      setTrigger(true);
+    },
+  });
+  const [novels, setNovels] = useState([]);
+
+  const {} = useQuery(
+    ["collection"],
+    () => {
+      const memberData = localStorage.getItem("memberData");
+      const mId = memberData ? JSON.parse(memberData)?.mId : null;
+      return getCollectionBymId(mId);
+    },
+    {
+      retry: false,
+      onSuccess: (res) => {
+        setNovels(res.novels);
+      },
+    }
+  );
+  const { data: authorList } = useQuery(["author"], getAllAuthor, {
+    retry: false,
   });
 
   const {} = useQuery(
@@ -49,7 +76,7 @@ const Bookshell = () => {
         justifyContent={"center"}
         alignItems={"center"}
       >
-        {bId ? (
+        {bId || trigger ? (
           <>
             <Box w={"100%"} fontSize={"3rem"} fontWeight={"600"}>
               My Bookshell
@@ -65,12 +92,9 @@ const Bookshell = () => {
               gap={"1rem"}
               p={10}
             >
-              <Card />
-              <Card />
-              <Card />
-              <Card />
-              <Card />
-              <Card />
+              {novels?.map((item, index) => (
+                <Card key={index} data={item} authors={authorList?.authors} />
+              ))}
             </Box>
           </>
         ) : (

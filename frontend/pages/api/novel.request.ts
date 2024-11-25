@@ -4,7 +4,7 @@ import {
   postWithResponse,
   delWithResponse,
   putWithResponse,
-} from "../../api/request";
+} from "./request";
 
 export const deleteNovel = async (
   nId: string,
@@ -17,11 +17,17 @@ export const deleteNovel = async (
 };
 
 export const updateNovel = async (
-  data:any,
+  data: any,
   nId: string,
   chapter: string
 ): Promise<any> => {
   return putWithResponse(`/novel/put?nId=${nId}&chapter=${chapter}`, {
+    data,
+  }).then((r) => r);
+};
+
+export const addCollection = async (data: any): Promise<any> => {
+  return postWithResponse(`/collection/new`, {
     data,
   }).then((r) => r);
 };

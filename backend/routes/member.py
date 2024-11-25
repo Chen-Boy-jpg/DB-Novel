@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request,make_response
 from flask_login import login_user, login_required, current_user,LoginManager,logout_user
 from models.member import Member
 from models import db
@@ -75,12 +75,21 @@ def login():
     user.id = member.mId  # 使用 mId 作為用戶的 id
     login_user(user)  # 使用 Flask-Login 來登入用戶
 
-    return jsonify({'message': 'Login successful!'}), 200
+    if member.is_super_admin:
+        respone=make_response(jsonify({'message': 'Super Admin Login successful!', 'is_super_admin': True}))
+        respone.set_cookie('role', 'superadmin' if member.is_super_admin else 'user', httponly=True)
+        return respone, 200
+    else:
+        return jsonify({'message': 'Login successful!', 'is_super_admin': False}), 200
+
 @member_bp.route('/logout', methods=['POST'])
 @login_required  
 def logout():
     logout_user()  
-    return jsonify({'message': 'Logout successful!'}), 200
+    response = make_response(jsonify({'message': 'Logout successful!'}))
+    response.delete_cookie('session')
+    response.delete_cookie('role')
+    return response, 200
 
 
 @member_bp.route('/profile', methods=['GET'])

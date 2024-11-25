@@ -4,6 +4,7 @@ from models.novel import Novel
 from models import db
 from models.author import Author
 import uuid
+from models.collection import Collection
 
 novel_bp = Blueprint('novel', __name__)
 
@@ -93,7 +94,10 @@ def delete_novel():
         return jsonify({'error': 'Novel not found.'}), 404
 
     # 刪除該紀錄
+    collections = Collection.query.filter_by(nId=nId, chapter=chapter).all()
     try:
+        for collection in collections:
+            db.session.delete(collection)
         db.session.delete(novel)
         db.session.commit()
         return jsonify({'message': 'Novel deleted successfully!'}), 200

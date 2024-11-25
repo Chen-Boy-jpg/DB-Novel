@@ -14,6 +14,7 @@ class Member(db.Model, UserMixin):
     email = db.Column(db.String(20))
     password = db.Column(db.String(10))
     birthday = db.Column(db.Date)
+    is_super_admin=db.Column(db.Boolean,default=False)
 
     def to_dict(self):
         return {
@@ -23,4 +24,5 @@ class Member(db.Model, UserMixin):
             'email': self.email,
             'password': self.password,
             'birthday': self.birthday.strftime('%Y-%m-%d') if self.birthday else None,
+            'is_super_admin':self.is_super_admin,
         }

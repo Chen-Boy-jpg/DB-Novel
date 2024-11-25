@@ -1,6 +1,6 @@
-import { request, post, postWithResponse } from "../../api/request";
+import { request, post, postWithResponse } from "./request";
 
-import * as Type from "../type/";
+import * as Type from "../../libs/type";
 
 export const getAllMember = async (): Promise<
   Type.MemberListType["members"]

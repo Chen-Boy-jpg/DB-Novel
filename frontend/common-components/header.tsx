@@ -24,7 +24,7 @@ const Header = () => {
   const toast = useToast();
   const router = useRouter();
   const leftDrawer = useDisclosure(); // 控制左侧 Drawer 的状态
-  const [authorTrigger, setAuthorTrigger] = useState(true);
+  const [authorTrigger, setAuthorTrigger] = useState(false);
   const { data } = useQuery("member", getProfile, {
     onSuccess: (res) => {
       localStorage.setItem("memberData", JSON.stringify(res));
@@ -46,14 +46,23 @@ const Header = () => {
         duration: 3000,
         isClosable: true,
       });
+      setAuthorTrigger(true);
     },
   });
 
   const {} = useQuery("author", () => getAuthor(), {
     retry: false,
     onSuccess: (res) => {
-      const author = res.authors.find((author) => author.aName === data?.mName);
-      if (author) setAuthorTrigger(false);
+      const author = res.authors.find(
+        (author) => author.aName.toString() === data?.mName.toString()
+      );
+      if (author) {
+        console.log("find");
+        setAuthorTrigger(true);
+      }
+    },
+    onError: (err) => {
+      setAuthorTrigger(false);
     },
   });
 
@@ -97,8 +106,8 @@ const Header = () => {
           borderRadius={"3rem"}
           color={"#3AB19B"}
           fontSize={"1.5rem"}
-          disabled={!authorTrigger}
           onClick={() => authorMutation.mutate(data?.mName)}
+          disabled={data?.is_super_admin || authorTrigger}
         >
           一鍵成為創作者
         </Button>
@@ -154,6 +163,7 @@ const Header = () => {
               fontWeight={"600"}
               variant={"ghost"}
               onClick={() => router.push("/home")}
+              disabled={data?.is_super_admin}
             >
               Home
             </Button>
@@ -165,6 +175,7 @@ const Header = () => {
               fontWeight={"600"}
               variant={"ghost"}
               onClick={() => router.push("/bookshell")}
+              disabled={data?.is_super_admin}
             >
               Bookshell
             </Button>
@@ -177,9 +188,33 @@ const Header = () => {
               fontWeight={"600"}
               variant={"ghost"}
               onClick={() => router.push("/author")}
-              disabled={authorTrigger}
+              disabled={data?.is_super_admin || !authorTrigger}
             >
               Author
+            </Button>
+            <Button
+              h={"5rem"}
+              w={"100%"}
+              bgColor={"white"}
+              fontSize={"2rem"}
+              fontWeight={"600"}
+              variant={"ghost"}
+              onClick={() => router.push("/cms")}
+              disabled={!data?.is_super_admin}
+            >
+              CMS
+            </Button>
+            <Button
+              h={"5rem"}
+              w={"100%"}
+              bgColor={"white"}
+              fontSize={"2rem"}
+              fontWeight={"600"}
+              variant={"ghost"}
+              onClick={() => router.push("/analyze")}
+              disabled={!data?.is_super_admin}
+            >
+              Analyze
             </Button>
           </DrawerBody>
         </DrawerContent>

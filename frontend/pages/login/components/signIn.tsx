@@ -9,9 +9,9 @@ import {
   FormErrorMessage,
 } from "@chakra-ui/react";
 import { useMutation, useQuery } from "react-query";
-import { loginRequest, regiestMember } from "../service/request";
+import { loginRequest, regiestMember } from "../../api/login.request";
 import { useForm } from "react-hook-form";
-import { MemberType } from "../type";
+import { MemberType } from "../../../libs/type";
 import { useRouter } from "next/router";
 
 const SignIn = () => {
@@ -48,8 +48,8 @@ const SignIn = () => {
 
   const loginMutation = useMutation(loginRequest, {
     onSuccess: (res) => {
-      console.log(res);
-      router.push("/home");
+      if (res.is_super_admin) router.push("/cms");
+      else router.replace("/home");
     },
     onError: (error) => {
       console.log(error);

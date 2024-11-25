@@ -9,7 +9,7 @@ class Novel(db.Model, UserMixin):
     # 將 nId 類型改為 UUID，並設置為默認自動生成
     nId = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     chapter = db.Column(db.String(10), nullable=False)
-    aId = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    aId = db.Column(UUID(as_uuid=True), db.ForeignKey('Author.aId'), nullable=False)
     desc = db.Column(db.Text)
     nName = db.Column(db.String(20))
     isSubscribe = db.Column(db.Boolean, default=False)
