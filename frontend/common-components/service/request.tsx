@@ -13,5 +13,5 @@ export const createAuthor = async (name: string) => {
 };
 
 export const getAuthor = async () => {
-  return request(`/author`, {}).then((r) => r);
+  return request(`/author/`, {}).then((r) => r);
 };

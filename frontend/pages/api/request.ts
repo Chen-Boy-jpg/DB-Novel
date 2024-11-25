@@ -12,7 +12,7 @@ interface Payload extends AxiosRequestConfig {
 }
 
 const api: AxiosInstance = axios.create({
-  baseURL: "http://localhost:5000/api", // 設定為固定的 baseURL
+  baseURL: " https://flask-backend-729816194831.us-central1.run.app/api", // 設定為固定的 baseURL
   responseType: "json",
   withCredentials: true,
 });
